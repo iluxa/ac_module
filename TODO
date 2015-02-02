@@ -1,0 +1,4 @@
+change memory control in kernel to slab allocators
+preallocate memory for module
+memory optimisations for automatas
+use per_cpu API
