@@ -8,7 +8,7 @@ Build and run tests in userspace:
     $ ./ac_test1
     $ ./ac_test2
 
-Build and run tests in kerne:
+Build and run tests in kernel:
     $ cd kernel
     $ make
     $ sudo insmod ac_mod.ko
