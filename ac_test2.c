@@ -48,7 +48,7 @@ static int __init ac_test_init_module( void )
 	int search_num = 1000;
 
 	ac_meminfo();
-	urls = ac_add_domain("ac_test2", 1, 2020);
+	urls = ac_add_domain("ac_test2", 1, 2020, 1);
 	if(!urls) {
 		PRINT("error adding domain\n");
 		return -1;

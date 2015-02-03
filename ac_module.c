@@ -98,6 +98,7 @@ struct automata {
 	struct domain *domain;
 	int id;
 	AC_AUTOMATA_t *atm;
+	uint8_t ignorecase; /* ascii only*/
 	uint8_t dirty; /* need rebuild */
 	uint8_t freed; /* freed atms should be moved from leased list to free list by thier owner cpu only */
 	atomic_t use;
@@ -146,7 +147,7 @@ void __ac_set_bit(uint8_t *mask, int n);
 int __ac_test_bit(uint8_t *mask, int n);
 inline void __ac_clear_bit(uint8_t *mask, int n); 
 
-void *ac_add_domain(const char* domain, unsigned automatas_number, unsigned patterns_number)
+void *ac_add_domain(const char* domain, unsigned automatas_number, unsigned patterns_number, int ignorecase)
 {
 	int i, j;
 	struct domain *dom;
@@ -209,7 +210,8 @@ void *ac_add_domain(const char* domain, unsigned automatas_number, unsigned patt
 			}
 			atm->id = j;
 			atm->domain = dom;
-			atm->atm = ac_automata_init();
+			atm->ignorecase = ignorecase;
+			atm->atm = ac_automata_init(atm->ignorecase);
 			ac_automata_finalize(atm->atm);
 			list_add_tail(&atm->list, &dom->automatas[i].free);
 #ifdef __KERNEL__
@@ -578,7 +580,7 @@ void __ac_automata_rebuild(struct automata *atm)
 
 	if(atm->atm)
 		ac_automata_release(atm->atm);
-	atm->atm = ac_automata_init();
+	atm->atm = ac_automata_init(atm->ignorecase);
 	for(i = 0; i < patt_num; i++) {
 		if(patterns[i].use_count == 0)
 			continue;

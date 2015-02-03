@@ -33,10 +33,11 @@ typedef struct hlist_head* ac_patterns;
  * @doman - domain name
  * @automatas_number - number of automatas for each cpu for this domain
  * @patterns_number - maximum patterns number can be added to this domain
+ * @ignorecase - case unsensitive search inside domain (ascii only)
  * 
  * @return - pointer to domain or NULL on error
  */
-void * ac_add_domain(const char* domain, unsigned automatas_number, unsigned patterns_number);
+void * ac_add_domain(const char* domain, unsigned automatas_number, unsigned patterns_number, int ignorecase);
 
 /**
  * ac_remove_domain - delete domain

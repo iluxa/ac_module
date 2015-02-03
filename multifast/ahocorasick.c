@@ -68,8 +68,9 @@ static void ac_automata_reset (AC_AUTOMATA_t * thiz);
  * FUNCTION: ac_automata_init
  * Initialize automata; allocate memories and set initial values
  * PARAMS:
+ * int ignorecase: case unsensitive search in automata, ascii only
 ******************************************************************************/
-AC_AUTOMATA_t * ac_automata_init ()
+AC_AUTOMATA_t * ac_automata_init (int ignorecase)
 {
     AC_AUTOMATA_t * thiz = (AC_AUTOMATA_t *)malloc(sizeof(AC_AUTOMATA_t));
     memset (thiz, 0, sizeof(AC_AUTOMATA_t));
@@ -80,6 +81,7 @@ AC_AUTOMATA_t * ac_automata_init ()
     ac_automata_reset (thiz);
     thiz->total_patterns = 0;
     thiz->automata_open = 1;
+    thiz->ignorecase = ignorecase;
     return thiz;
 }
 
@@ -111,6 +113,8 @@ AC_STATUS_t ac_automata_add (AC_AUTOMATA_t * thiz, AC_PATTERN_t * patt)
     for (i=0; i<patt->length; i++)
     {
         alpha = patt->astring[i];
+	if(thiz->ignorecase && alpha>65 && alpha<90)
+		alpha += 32;
         if ((next = node_find_next(n, alpha)))
         {
             n = next;
@@ -121,8 +125,8 @@ AC_STATUS_t ac_automata_add (AC_AUTOMATA_t * thiz, AC_PATTERN_t * patt)
             next = node_create_next(n, alpha);
             next->depth = n->depth + 1;
             n = next;
-			if(thiz->all_nodes_num >= thiz->all_nodes_max)
-			    return ACERR_NUMBER_TOO_BIG;
+    	    if(thiz->all_nodes_num >= thiz->all_nodes_max)
+		    return ACERR_NUMBER_TOO_BIG;
             ac_automata_register_nodeptr(thiz, n);
         }
     }
@@ -204,7 +208,10 @@ int ac_automata_search (AC_AUTOMATA_t * thiz, AC_TEXT_t * text, int keep,
      * it must be as lightweight as possible. */
     while (position < text->length)
     {
-        if (!(next = node_findbs_next(current_ac, text->astring[position])))
+	char c = text->astring[position];
+	if(thiz->ignorecase && c>65 && c<90)
+		c+=32;
+        if ( !(next = node_findbs_next(current_ac, c)))
         {
             if(current_ac->failure_node /* we are not in the root node */)
                 current_ac = current_ac->failure_node;

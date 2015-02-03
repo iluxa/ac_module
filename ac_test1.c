@@ -49,14 +49,14 @@ static int __init ac_test_init_module( void )
 	const char *hosts1[] = {"microsoft.com", "amazon.com", "ebay.com"};
 	int hosts_num1 = sizeof(hosts1)/sizeof(char*);
 
-	const char *hosts2[] = {"linkedin.com", "wikipedia.org", "ebay.com", "lin"};
+	const char *hosts2[] = {"linkedin.com", "wikipedia.org", "ebay.com", "LIn"};
 	int hosts_num2 = sizeof(hosts2)/sizeof(char*);
 
-	char *urls_str[] = {"www.linkedin.com/index.html", "www.amazon.com/index.php", "www.ebay.com/index.php", "www.onecoolsite.com/travel.html"};
+	char *urls_str[] = {"www.Linkedin.com/index.html", "www.amazon.com/index.php", "www.ebay.com/index.php", "www.onecoolsite.com/travel.html"};
 	int urls_num = sizeof(urls_str)/sizeof(char*);
 
 	ac_meminfo();
-	urls = ac_add_domain("ac_test1", 1, 2050);
+	urls = ac_add_domain("ac_test1", 1, 2050, 1);
 	if(!urls) {
 		PRINT("error adding domain\n");
 		return -1;
